@@ -1,0 +1,60 @@
+NAME=$$(basename $$(pwd))
+SRC=article
+SOURCE=${SRC}.lp
+NWSRC=${SRC}.nw
+MDSRC=${SRC}.md
+PROGRAM= ${NAME}
+DOC= ${NAME}.html
+MD2HTML=md2html
+LP2MD=./lp2md.pl
+LP2NW=./lp2nw.pl
+BROWSER=chromium-browser
+
+.SILENT:retangle
+.SILENT:lp2nw
+
+
+all: tangle weave
+
+lp2md:
+	$(LP2MD) ${SOURCE} > ${MDSRC}
+
+lp2nw:
+	$(LP2NW) ${SOURCE} > ${NWSRC}
+
+tangle: lp2nw
+	syncweb -lang shell ${NWSRC} ${PROGRAM}
+
+retangle: lp2nw
+	rm -f ${PROGRAM}
+	syncweb -lang shell ${NWSRC} ${PROGRAM}
+
+weave: lp2md
+
+weave: lp2md
+	$(MD2HTML) ${MDSRC} > ${DOC}
+
+pkg: all
+	rm -rf ${NAME}
+	mkdir ${NAME}
+	cp ${MDSRC} ${NAME}/
+	cp ${PROGRAM} ${NAME}/
+	tar cfvz ${NAME}.tar.gz ${NAME}
+	mv ${NAME}.tar.gz ../
+	mv ${DOC} ../
+	rm -rf ${NAME}
+
+clean:
+	[ -d trash ] || mkdir trash
+	mv  ${PROGRAM}.c ${NAME} trash/
+	mv  *.html *.md *.nw trash/
+	mv  .*.swp *.tmp trash/
+	mv  *.tex *.pdf trash/
+	mv  *.bin *.out trash/
+	mv  log trash/
+
+.SILENT:run
+run: retangle
+	sed -i -e '/# nw/d'  ${PROGRAM}
+	chmod 0755 ${PROGRAM}
+	./${PROGRAM}

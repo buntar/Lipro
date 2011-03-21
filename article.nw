@@ -1,0 +1,88 @@
+Lipro - Literate Programming
+============================
+
+    (C) 1011 Ben, untar.org
+
+A Perl template for new projects.
+
+****
+
+
+#toc | Table of Contents  ##
+
+
+[[#script]]     | 1. The script  
+[[#intro]]      | 2. Intro   
+
+#script | Script  ##
+
+
+<<app>>=
+
+
+<<head>> 
+
+<<entry>> 
+
+<<main>> 
+
+@
+[[#toc]] | up
+
+
+#intro | 2. Intro ##
+
+Literate programming, because coding is not painfull enough.
+
+[[#toc]] | up
+
+
+<<entry>>=
+
+#  Calls main, starts the wohle thing
+# 
+
+main('hell');
+
+@
+[[#app ]] [[#head]]
+
+
+<<main>>=
+
+#  this is a in code comm
+#  This is the main loop
+#  may another time
+# 
+
+
+sub main {
+    my $name = shift;
+    say "hello $name";
+}
+
+
+@
+[[#app ]] [[#head]]
+
+
+#header | 3. Header ##
+
+The most used pragmas and license into:
+
+<<head>>=
+
+#!/usr/bin/perl -w
+use strict;
+use warnings;
+use 5.010;
+
+# Copyright (C) 2010 Ben
+
+
+@
+[[#app]] 
+[[#main]]
+
+
+
