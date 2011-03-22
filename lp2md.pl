@@ -19,8 +19,9 @@ use warnings;
 
 
 
-if (/#.*\.(\w\w)\s* \/*(.+)/){  # titles
-    print "$1 - $2";
+
+if (/\s*#\s*cmd\:.*/){ # cmds
+    print "";
 } elsif (/\_\_\_\_*/){
     print "";
 } elsif (/\[\[(#.+)\]\]\s*\|\s*([\s\w\.]*)/){ # links to headers
@@ -29,7 +30,9 @@ if (/#.*\.(\w\w)\s* \/*(.+)/){  # titles
     print "[_$1_: ](#$1) $2  ";
 } elsif (/#(\w*)\s*\|\s*([\s\w\.]*)\s*(#*)\s*$/){ # headers(md)
     print "<h", length($3), " id=$1> $2</h", length($3), ">";
-} elsif (/#(.*)\s*\>>=\s*([^#|.]*)\s*(#*)\s*$/){ # headers(nw)
+} elsif (/#(.*)\s*\>>=\s*(\w*\.\w*)\s*(#*)\s*$/){ # headers(nw)
+    print "<h", length($3), " id=$1>$2</h", length($3), ">";
+} elsif (/#(.*)\s*\>>=\s*([\w|\s]*)\s*(#*)\s*$/){ # headers(nw)
     print "<h", length($3), " id=$1>_$1_: $2</h", length($3), ">";
 } elsif (/\[\[\s*#(\w*)\s*\]\]/){ # reference
     print "[$1](#$1)";

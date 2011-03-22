@@ -1,7 +1,8 @@
 #!/usr/bin/perl -wnl
 # pre: ls
-# cmd: lp2md.pl article.lp  >| a.md && pandoc -s a.md >| a.html
-# end: head -n 20 article.lp
+# cmd: lp2nw.pl article.lp  >| a.nw
+# end: notangle -Rtempl a.nw >| a.pl
+
 # end: chromium-browser a.html
 
 # ls /home/ben/codes/writing.ben/mag.intra/Issue-2010-12/perl_template
@@ -19,24 +20,17 @@ use warnings;
 
 
 
-
-if (/\s*#\s*cmd\:.*/){ # cmds
-    print "";
-} elsif (/#sources\s*\>>=\s*(#*)\s*$/){ # headers(nw)
-    print '<<*>>=';
-} elsif (/^\/\s*\[\[#(.+)\]\]\s*\>\>\s*(\w*\.\w*)/){ # links snippets
-    print "<<$2>> ";
+if (/#.*\.(\w\w)\s* \/*(.+)/){  # titles
+    print "$1 - $2";
 } elsif (/^\/\s*\[\[#(.+)\]\]\s*\>\>\s*(.+)/){ # links snippets
     print "<<$1>> ";
-} elsif (/#(.*)\s*\>>=\s*(\w*\.\w*)\s*(#*)\s*$/){ # headers(nw)
-    print "<<$2>>=";
-} elsif (/#(.*)\s*\>>=\s*([\w|\s]*)\s*(#*)\s*$/){ # headers(nw)
+} elsif (/#(\w*)\s*\>>=\s*([^#|.]*)\s*(#*)\s*$/){ # headers(nw)
     print "<<$1>>=";
+} elsif (/#sources\s*\>>=\s*([^#|.]*)\s*(#*)\s*$/){ # sources
+    print "<<*>>=";
 } elsif (/\/----*/){ # code block open
     print "";
-} elsif (/~~~*\((\w*)/){ # code block open
-    print "";
-} elsif (/~~~*$/){ # code block end
+} elsif (/~~~*/){ # code block open
     print "";
 } elsif (/^\|\s*----*/){ # code block end
     print "";
@@ -46,8 +40,10 @@ if (/\s*#\s*cmd\:.*/){ # cmds
     print "@";
 } elsif (/^\/\s*$/){ # nw block end
     print "";
-} elsif (/^\|(.*)/){ # nw block end
+} elsif (/^\/(.*)/){ # nw block end
     print "$1";
+} elsif (/^\|(.*)/){ # nw block end
+    print "# $1";
 } else {
     print;
 }
